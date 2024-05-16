@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
 
+// Thunk untuk fetch data
 export const fetchData = createAsyncThunk(
   "data/fetchData",
   async (_, { rejectWithValue }) => {
@@ -14,6 +15,7 @@ export const fetchData = createAsyncThunk(
   }
 );
 
+// Thunk untuk fetch detail data
 export const fetchDetailData = createAsyncThunk(
   "data/fetchDetailData",
   async (id: any, { rejectWithValue }) => {
@@ -28,6 +30,20 @@ export const fetchDetailData = createAsyncThunk(
   }
 );
 
+// Thunk untuk delete data
+export const deleteData = createAsyncThunk(
+  "data/deleteData",
+  async (id: any, { rejectWithValue }) => {
+    try {
+      await axios.delete(`https://contact.herokuapp.com/contact/${id}`);
+      return id;
+    } catch (error: any) {
+      return rejectWithValue("Error deleting data");
+    }
+  }
+);
+
+// State interface
 interface DataState {
   data: any[];
   detailData: any;
@@ -44,12 +60,14 @@ const initialState: DataState = {
   error: null,
 };
 
+// Data slice
 const dataSlice = createSlice({
   name: "data",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Handle fetch data
       .addCase(fetchData.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -62,6 +80,7 @@ const dataSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
+      // Handle fetch detail data
       .addCase(fetchDetailData.pending, (state) => {
         state.detailLoading = true;
         state.error = null;
@@ -73,6 +92,19 @@ const dataSlice = createSlice({
       .addCase(fetchDetailData.rejected, (state, action) => {
         state.detailLoading = false;
         state.error = action.payload as string;
+      })
+      // Handle delete data
+      .addCase(deleteData.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = state.data.filter((item) => item.id !== action.payload);
+      })
+      .addCase(deleteData.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
@@ -80,12 +112,8 @@ const dataSlice = createSlice({
 export default dataSlice.reducer;
 
 export const selectData = (state: RootState) => state.data.data;
-
 export const selectDetailData = (state: RootState) => state.data.detailData;
-
 export const selectError = (state: RootState) => state.data.error;
-
 export const selectIsLoading = (state: RootState) => state.data.isLoading;
-
 export const selectDetailLoading = (state: RootState) =>
   state.data.detailLoading;

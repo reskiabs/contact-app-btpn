@@ -3,6 +3,7 @@ import UserSkeleton from "@/components/UserSkeleton";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import {
+  deleteData,
   fetchData,
   selectData,
   selectError,
@@ -10,9 +11,10 @@ import {
 } from "@/utils/dataSlice";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -38,17 +40,24 @@ const Calls = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const editing = useSharedValue(-30);
-
   const [isEditing, setIsEditing] = useState(false);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-
+  const [refreshing, setRefreshing] = useState(false);
   const data = useSelector(selectData);
   const error = useSelector(selectError);
   const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(fetchData() as any);
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      dispatch(fetchData() as any);
+      setRefreshing(false);
+    }, 1000);
   }, []);
 
   const filterData = (query: string) => {
@@ -64,6 +73,9 @@ const Calls = () => {
     filterData(search);
   }, [search]);
 
+  const handleDelete = (id: string) => {
+    dispatch(deleteData(id) as any);
+  };
   const onEdit = () => {
     let editingNew = !isEditing;
     editing.value = editingNew ? 0 : -30;
@@ -76,8 +88,6 @@ const Calls = () => {
       params: { id: id },
     });
   };
-
-  const removeCall = () => {};
 
   const animatedRowStyle = useAnimatedStyle(() => ({
     transform: [
@@ -109,11 +119,25 @@ const Calls = () => {
         contentContainerStyle={{
           paddingBottom: 40,
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {isLoading ? (
           <UserSkeleton />
         ) : error ? (
-          <Text>Error: {error}</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 300,
+            }}
+          >
+            <Text style={{ color: "red" }}>
+              {error}, Swipe down to refresh!
+            </Text>
+          </View>
         ) : (
           <Animated.View style={defaultStyles.block} layout={transition}>
             <Animated.FlatList
@@ -126,7 +150,7 @@ const Calls = () => {
               itemLayoutAnimation={transition}
               skipEnteringExitingAnimations
               renderItem={({ item, index }) => (
-                <SwipeableRow onDelete={() => removeCall()}>
+                <SwipeableRow onDelete={() => handleDelete(item.id)}>
                   <Animated.View
                     style={{
                       flexDirection: "row",
@@ -154,9 +178,7 @@ const Calls = () => {
                     >
                       <Image
                         source={{
-                          uri:
-                            // item.photo ||
-                            "file:///Users/reskiabbas/Library/Developer/CoreSimulator/Devices/0679454E-2872-4111-BE76-74BE586503C4/data/Containers/Data/Application/AC37EC8B-29C3-467B-8CDA-DEE225986E86/Library/Caches/ImagePicker/A4E488E0-9802-404B-9D44-D9A6FD75ED9B.jpg",
+                          uri: "file:///Users/reskiabbas/Library/Developer/CoreSimulator/Devices/0679454E-2872-4111-BE76-74BE586503C4/data/Containers/Data/Application/AC37EC8B-29C3-467B-8CDA-DEE225986E86/Library/Caches/ImagePicker/A4E488E0-9802-404B-9D44-D9A6FD75ED9B.jpg",
                         }}
                         style={styles.avatar}
                       />
