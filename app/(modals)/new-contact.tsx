@@ -1,4 +1,6 @@
 import BoxedIcon from "@/components/BoxedIcon";
+import FormSkeleton from "@/components/FormSkeleton";
+import ProfileImgSkeleton from "@/components/ProfileImgSkeleton";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import {
@@ -208,7 +210,9 @@ const NewContact = () => {
       />
 
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        {photo ? (
+        {isLoading ? (
+          <ProfileImgSkeleton />
+        ) : photo ? (
           <View style={styles.profileContainer}>
             <Image source={{ uri: photo }} style={styles.image} />
             <TouchableOpacity onPress={() => setPhoto("")}>
@@ -242,34 +246,40 @@ const NewContact = () => {
           </View>
         )}
 
-        <View style={defaultStyles.block}>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleFirstNameChange}
-            value={firstName}
-            placeholder="First Name"
-          />
+        {isLoading ? (
+          <FormSkeleton />
+        ) : (
+          <View style={defaultStyles.block}>
+            <TextInput
+              style={styles.input}
+              onChangeText={handleFirstNameChange}
+              value={firstName}
+              placeholder="First Name"
+            />
 
-          <View style={styles.separator} />
-          <TextInput
-            style={styles.input}
-            onChangeText={handleLastNameChange}
-            value={lastName}
-            placeholder="Last Name"
-          />
+            <View style={styles.separator} />
+            <TextInput
+              style={styles.input}
+              onChangeText={handleLastNameChange}
+              value={lastName}
+              placeholder="Last Name"
+            />
 
-          <View style={styles.separator} />
-          <TextInput
-            style={styles.input}
-            onChangeText={handleAgeChange}
-            value={age}
-            placeholder="Age"
-            keyboardType="numeric"
-          />
-        </View>
+            <View style={styles.separator} />
+            <TextInput
+              style={styles.input}
+              onChangeText={handleAgeChange}
+              value={age}
+              placeholder="Age"
+              keyboardType="numeric"
+            />
+          </View>
+        )}
+
         <Text style={styles.error}>
           Do not include spaces and input more than two digits!
         </Text>
+
         <View style={defaultStyles.block}>
           <FlatList
             data={devices}
