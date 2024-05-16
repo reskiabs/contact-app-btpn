@@ -9,7 +9,7 @@ import { Alert, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
-import store from "../redux/store";
+import store from "../store";
 
 export {
   // Catch any errors thrown by the Layout component.

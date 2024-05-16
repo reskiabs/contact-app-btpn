@@ -1,5 +1,5 @@
-import UserSkeleton from "@/components/Skeleton";
 import SwipeableRow from "@/components/SwipeableRow";
+import UserSkeleton from "@/components/UserSkeleton";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import {
@@ -7,7 +7,7 @@ import {
   selectData,
   selectError,
   selectIsLoading,
-} from "@/redux/dataSlice";
+} from "@/utils/dataSlice";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -111,11 +111,6 @@ const Calls = () => {
         }}
       >
         {isLoading ? (
-          // <ActivityIndicator
-          //   size="large"
-          //   color={Colors.primary}
-          //   style={{ marginTop: 300 }}
-          // />
           <UserSkeleton />
         ) : error ? (
           <Text>Error: {error}</Text>
@@ -160,7 +155,7 @@ const Calls = () => {
                       <Image
                         source={{
                           uri:
-                            item.photo ||
+                            // item.photo ||
                             "file:///Users/reskiabbas/Library/Developer/CoreSimulator/Devices/0679454E-2872-4111-BE76-74BE586503C4/data/Containers/Data/Application/AC37EC8B-29C3-467B-8CDA-DEE225986E86/Library/Caches/ImagePicker/A4E488E0-9802-404B-9D44-D9A6FD75ED9B.jpg",
                         }}
                         style={styles.avatar}

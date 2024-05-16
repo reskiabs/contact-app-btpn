@@ -6,7 +6,7 @@ import {
   selectDetailData,
   selectDetailLoading,
   selectError,
-} from "@/redux/dataSlice";
+} from "@/utils/dataSlice";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
