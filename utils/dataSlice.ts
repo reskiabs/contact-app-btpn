@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
 
-// Thunk untuk fetch data
 export const fetchData = createAsyncThunk(
   "data/fetchData",
   async (_, { rejectWithValue }) => {
@@ -15,7 +14,6 @@ export const fetchData = createAsyncThunk(
   }
 );
 
-// Thunk untuk fetch detail data
 export const fetchDetailData = createAsyncThunk(
   "data/fetchDetailData",
   async (id: any, { rejectWithValue }) => {
@@ -30,7 +28,6 @@ export const fetchDetailData = createAsyncThunk(
   }
 );
 
-// Thunk untuk delete data
 export const deleteData = createAsyncThunk(
   "data/deleteData",
   async (id: any, { rejectWithValue }) => {
@@ -38,7 +35,8 @@ export const deleteData = createAsyncThunk(
       await axios.delete(`https://contact.herokuapp.com/contact/${id}`);
       return id;
     } catch (error: any) {
-      return rejectWithValue("Error deleting data");
+      console.log(error);
+      return rejectWithValue("Oops, something went wrong");
     }
   }
 );

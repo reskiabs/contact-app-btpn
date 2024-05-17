@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Image,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -36,7 +35,7 @@ const transition = CurvedTransition.delay(100);
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 
-const Calls = () => {
+const ContactPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const editing = useSharedValue(-30);
@@ -134,9 +133,7 @@ const Calls = () => {
               marginTop: 300,
             }}
           >
-            <Text style={{ color: "red" }}>
-              {error}, Swipe down to refresh!
-            </Text>
+            <Text style={{ color: "red" }}>{error}, Pull down to refresh!</Text>
           </View>
         ) : (
           <Animated.View style={defaultStyles.block} layout={transition}>
@@ -176,12 +173,9 @@ const Calls = () => {
                         { paddingLeft: 10 },
                       ]}
                     >
-                      <Image
-                        source={{
-                          uri: "file:///Users/reskiabbas/Library/Developer/CoreSimulator/Devices/0679454E-2872-4111-BE76-74BE586503C4/data/Containers/Data/Application/AC37EC8B-29C3-467B-8CDA-DEE225986E86/Library/Caches/ImagePicker/A4E488E0-9802-404B-9D44-D9A6FD75ED9B.jpg",
-                        }}
-                        style={styles.avatar}
-                      />
+                      <View style={styles.imageContainer}>
+                        <Ionicons name="person" size={32} color="white" />
+                      </View>
                       <View style={{ flex: 1, gap: 2 }}>
                         <Text
                           style={{
@@ -243,6 +237,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
   },
+  imageContainer: {
+    backgroundColor: Colors.background,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    display: "flex",
+  },
 });
 
-export default Calls;
+export default ContactPage;
